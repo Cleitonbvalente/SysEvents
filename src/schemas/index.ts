@@ -1,7 +1,7 @@
 import { pgTable, serial, varchar, text, timestamp, integer, decimal, boolean, date, time, primaryKey } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 
-// ========== ENTIDADE USUÁRIO ==========
+// ENTIDADE USUÁRIO
 export const usuarios = pgTable('usuarios', {
   id: serial('id').primaryKey(),
   nome: varchar('nome', { length: 255 }).notNull(),
@@ -13,7 +13,7 @@ export const usuarios = pgTable('usuarios', {
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
-// ========== ENTIDADE EVENTO ==========
+// ENTIDADE EVENTO
 export const eventos = pgTable('eventos', {
   id: serial('id').primaryKey(),
   titulo: varchar('titulo', { length: 255 }).notNull(),
@@ -27,7 +27,7 @@ export const eventos = pgTable('eventos', {
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
 
-// ========== ENTIDADE PROGRAMAÇÃO (um-para-muitos com Evento) ==========
+// ENTIDADE PROGRAMAÇÃO (um-para-muitos com Evento)
 export const programacoes = pgTable('programacoes', {
   id: serial('id').primaryKey(),
   eventoId: integer('evento_id').references(() => eventos.id, { onDelete: 'cascade' }).notNull(),
@@ -40,7 +40,7 @@ export const programacoes = pgTable('programacoes', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
-// ========== ENTIDADE PALESTRANTE ==========
+// ENTIDADE PALESTRANTE
 export const palestrantes = pgTable('palestrantes', {
   id: serial('id').primaryKey(),
   nome: varchar('nome', { length: 255 }).notNull(),
@@ -51,7 +51,7 @@ export const palestrantes = pgTable('palestrantes', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
-// ========== RELACIONAMENTO MUITOS-PARA-MUITOS: Evento <-> Palestrante ==========
+// RELACIONAMENTO MUITOS-PARA-MUITOS: Evento <-> Palestrante
 export const eventoPalestrantes = pgTable('evento_palestrantes', {
   eventoId: integer('evento_id').references(() => eventos.id, { onDelete: 'cascade' }).notNull(),
   palestranteId: integer('palestrante_id').references(() => palestrantes.id, { onDelete: 'cascade' }).notNull(),
@@ -60,7 +60,7 @@ export const eventoPalestrantes = pgTable('evento_palestrantes', {
   pk: primaryKey({ columns: [table.eventoId, table.palestranteId] }),
 }));
 
-// ========== ENTIDADE INGRESSO (um-para-muitos com Evento) ==========
+// ENTIDADE INGRESSO (um-para-muitos com Evento)
 export const ingressos = pgTable('ingressos', {
   id: serial('id').primaryKey(),
   eventoId: integer('evento_id').references(() => eventos.id, { onDelete: 'cascade' }).notNull(),
@@ -73,7 +73,7 @@ export const ingressos = pgTable('ingressos', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
-// ========== ENTIDADE COMPRA (relaciona Usuario com Ingresso) ==========
+// ENTIDADE COMPRA (relaciona Usuario com Ingresso)
 export const compras = pgTable('compras', {
   id: serial('id').primaryKey(),
   usuarioId: integer('usuario_id').references(() => usuarios.id).notNull(),
@@ -84,7 +84,7 @@ export const compras = pgTable('compras', {
   dataCompra: timestamp('data_compra').defaultNow().notNull(),
 });
 
-// ========== ENTIDADE CHECKLIST (um-para-muitos com Evento) ==========
+// ENTIDADE CHECKLIST (um-para-muitos com Evento)
 export const checklists = pgTable('checklists', {
   id: serial('id').primaryKey(),
   eventoId: integer('evento_id').references(() => eventos.id, { onDelete: 'cascade' }).notNull(),
@@ -94,7 +94,7 @@ export const checklists = pgTable('checklists', {
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
-// ========== ENTIDADE ARQUIVO MÍDIA (um-para-muitos com Evento) ==========
+// ENTIDADE ARQUIVO MÍDIA (um-para-muitos com Evento)
 export const arquivosMidia = pgTable('arquivos_midia', {
   id: serial('id').primaryKey(),
   eventoId: integer('evento_id').references(() => eventos.id, { onDelete: 'cascade' }).notNull(),
@@ -106,7 +106,7 @@ export const arquivosMidia = pgTable('arquivos_midia', {
 
 
 
-// ========== RELAÇÕES (para uso no Drizzle) ==========
+// RELAÇÕES (para uso no Drizzle)
 export const eventosRelations = relations(eventos, ({ many, one }) => ({
   programacoes: many(programacoes),
   ingressos: many(ingressos),
@@ -158,4 +158,4 @@ export const comprasRelations = relations(compras, ({ one }) => ({
   }),
 }));
 
-export * from './relations'; // Se tiver arquivo de relações separado
+export * from './relations';

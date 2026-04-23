@@ -43,6 +43,14 @@ app.get('/', (req, res) => {
   });
 });
 
+app.get('/debug', (req, res) => {
+  res.json({
+    node_env: process.env.NODE_ENV,
+    db_url_exists: !!process.env.DATABASE_URL,
+    db_url_prefix: process.env.DATABASE_URL ? process.env.DATABASE_URL.substring(0, 50) : 'not set'
+  });
+});
+
 // Iniciar servidor
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando na porta ${PORT}`);

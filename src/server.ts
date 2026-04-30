@@ -6,6 +6,7 @@ import eventoRoutes from './routes/eventoRoutes';
 import path from 'path';
 import { upload } from './middlewares/upload';
 import uploadRoutes from './routes/uploadRoutes';
+import adminRoutes from './routes/adminRoutes';
 
 dotenv.config();
 
@@ -25,7 +26,8 @@ app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 // Rotas
 app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/eventos', eventoRoutes);
-app.use('/api/upload', uploadRoutes); // ← Adicionar esta linha
+app.use('/api/upload', uploadRoutes);
+app.use('/api/admin', adminRoutes);
 
 // Rota de teste
 app.get('/health', (req, res) => {

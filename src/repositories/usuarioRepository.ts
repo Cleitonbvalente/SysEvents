@@ -30,4 +30,12 @@ export class UsuarioRepository {
   async delete(id: number) {
     await db.delete(usuarios).where(eq(usuarios.id, id));
   }
+
+  async updateAvatar(id: number, avatarUrl: string) {
+  const result = await db.update(usuarios)
+    .set({ avatarUrl, updatedAt: new Date() })
+    .where(eq(usuarios.id, id))
+    .returning();
+  return result[0];
+  }
 }

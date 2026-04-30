@@ -56,4 +56,16 @@ export class UsuarioController {
       res.status(404).json({ success: false, error: error.message });
     }
   }
+  async uploadAvatar(req: Request, res: Response) {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ success: false, error: 'Nenhum arquivo enviado' });
+    }
+    
+    const usuario = await usuarioService.uploadAvatar(req.usuarioId!, req.file);
+    res.json({ success: true, data: usuario });
+  } catch (error: any) {
+    res.status(400).json({ success: false, error: error.message });
+  }
+}
 }

@@ -3,6 +3,9 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import usuarioRoutes from './routes/usuarioRoutes';
 import eventoRoutes from './routes/eventoRoutes';
+import path from 'path';
+import { upload } from './middlewares/upload';
+import uploadRoutes from './routes/uploadRoutes';
 
 dotenv.config();
 
@@ -14,9 +17,15 @@ app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+
+
+// Servir arquivos estáticos (avatares)
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
 // Rotas
 app.use('/api/usuarios', usuarioRoutes);
 app.use('/api/eventos', eventoRoutes);
+app.use('/api/upload', uploadRoutes); // ← Adicionar esta linha
 
 // Rota de teste
 app.get('/health', (req, res) => {

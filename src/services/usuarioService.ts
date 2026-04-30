@@ -53,4 +53,16 @@ export class UsuarioService {
     const { senhaHash, ...usuarioSemSenha } = usuario;
     return usuarioSemSenha;
   }
+
+  async uploadAvatar(usuarioId: number, arquivo: Express.Multer.File) {
+  if (!arquivo) {
+    throw new Error('Nenhum arquivo enviado');
+  }
+  
+  const avatarUrl = `/uploads/avatars/${arquivo.filename}`;
+  const usuario = await usuarioRepository.updateAvatar(usuarioId, avatarUrl);
+  
+  const { senhaHash, ...usuarioSemSenha } = usuario;
+  return { ...usuarioSemSenha, avatarUrl };
+  }
 }

@@ -54,7 +54,7 @@ export class UsuarioService {
     return usuarioSemSenha;
   }
 
-  async uploadAvatar(usuarioId: number, arquivo: Express.Multer.File) {
+  async uploadAvatar(usuarioId: number, arquivo: any) {
   if (!arquivo) {
     throw new Error('Nenhum arquivo enviado');
   }

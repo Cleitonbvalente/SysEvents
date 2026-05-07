@@ -1,8 +1,10 @@
 import { UsuarioRepository } from '../repositories/usuarioRepository';
 import { hashPassword, comparePassword } from '../utils/bcrypt';
 import { generateToken } from '../utils/jwt';
+import { CloudinaryService } from './cloudinaryService';
 
 const usuarioRepository = new UsuarioRepository();
+const cloudinaryService = new CloudinaryService(); // ✅ Instância fora da classe
 
 export class UsuarioService {
   async registrar(dados: { nome: string; email: string; senha: string; papel: string }) {
@@ -62,14 +64,15 @@ export class UsuarioService {
     return usuarioSemSenha;
   }
 
-  async uploadAvatar(usuarioId: number, arquivo: any) {
+  // ✅ Método atualizado com Cloudinary
+  async uploadAvatar(usuarioId: number, arquivo: Express.Multer.File) {
     if (!arquivo) {
       throw new Error('Nenhum arquivo enviado');
     }
-    
-    const avatarUrl = `/uploads/avatars/${arquivo.filename}`;
+
+    const avatarUrl = await cloudinaryService.uploadAvatar(arquivo, usuarioId);
     const usuario = await usuarioRepository.updateAvatar(usuarioId, avatarUrl);
-    
+
     const { senhaHash, ...usuarioSemSenha } = usuario;
     return { ...usuarioSemSenha, avatarUrl };
   }

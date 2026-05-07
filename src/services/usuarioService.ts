@@ -4,7 +4,7 @@ import { generateToken } from '../utils/jwt';
 import { CloudinaryService } from './cloudinaryService';
 
 const usuarioRepository = new UsuarioRepository();
-const cloudinaryService = new CloudinaryService(); // ✅ Instância fora da classe
+const cloudinaryService = new CloudinaryService();
 
 export class UsuarioService {
   async registrar(dados: { nome: string; email: string; senha: string; papel: string }) {
@@ -64,8 +64,8 @@ export class UsuarioService {
     return usuarioSemSenha;
   }
 
-  // ✅ Método atualizado com Cloudinary
-  async uploadAvatar(usuarioId: number, arquivo: Express.Multer.File) {
+  // ✅ Upload com Cloudinary
+  async uploadAvatar(usuarioId: number, arquivo: any) {
     if (!arquivo) {
       throw new Error('Nenhum arquivo enviado');
     }
@@ -78,7 +78,7 @@ export class UsuarioService {
   }
 
   // ========== ADMIN METHODS ==========
-  
+
   async adminCriarUsuario(dados: { nome: string; email: string; senha: string; papel: string }) {
     const existingUser = await usuarioRepository.findByEmail(dados.email);
     if (existingUser) {
@@ -125,11 +125,11 @@ export class UsuarioService {
     if (!usuario) {
       throw new Error('Usuário não encontrado');
     }
-    
+
     if (usuario.papel === 'admin') {
       throw new Error('Não é possível deletar outro administrador');
     }
-    
+
     await usuarioRepository.delete(id);
     return { message: 'Usuário deletado com sucesso' };
   }

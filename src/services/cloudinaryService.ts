@@ -10,16 +10,32 @@ cloudinary.config({
 });
 
 export class CloudinaryService {
-  async uploadAvatar(file: Express.Multer.File, userId: number): Promise<string> {
+  async uploadAvatar(file: any, userId: number): Promise<string> {
+    if (!file || !file.buffer) {
+      throw new Error('Arquivo inválido ou sem buffer');
+    }
+
+    // Converte o buffer para base64
     const base64String = file.buffer.toString('base64');
     const dataUri = `data:${file.mimetype};base64,${base64String}`;
 
+    // Upload para o Cloudinary
     const result = await cloudinary.uploader.upload(dataUri, {
       folder: `sysevents/avatars/${userId}`,
       public_id: `${Date.now()}`,
-      transformation: [{ width: 300, height: 300, crop: 'limit', quality: 'auto' }]
+      transformation: [
+        { width: 300, height: 300, crop: 'limit', quality: 'auto' }
+      ]
     });
 
     return result.secure_url;
+  }
+
+  async deleteAvatar(publicId: string): Promise<void> {
+    try {
+      await cloudinary.uploader.destroy(publicId);
+    } catch (error) {
+      console.error('Erro ao deletar imagem do Cloudinary:', error);
+    }
   }
 }

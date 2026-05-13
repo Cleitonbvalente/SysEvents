@@ -64,7 +64,6 @@ export class UsuarioService {
     return usuarioSemSenha;
   }
 
-  // ✅ Upload com Cloudinary
   async uploadAvatar(usuarioId: number, arquivo: any) {
     if (!arquivo) {
       throw new Error('Nenhum arquivo enviado');
@@ -77,8 +76,30 @@ export class UsuarioService {
     return { ...usuarioSemSenha, avatarUrl };
   }
 
-  // ========== ADMIN METHODS ==========
+  // ========== PERFIL DO USUÁRIO ==========
 
+  async getPerfil(usuarioId: number) {
+    const usuario = await usuarioRepository.findById(usuarioId);
+    if (!usuario) {
+      throw new Error('Usuário não encontrado');
+    }
+    const { senhaHash, ...perfil } = usuario;
+    return perfil;
+  }
+
+  async updatePerfil(usuarioId: number, dados: { bio?: string; telefone?: string; endereco?: string }) {
+    const usuario = await usuarioRepository.findById(usuarioId);
+    if (!usuario) {
+      throw new Error('Usuário não encontrado');
+    }
+    
+    const updated = await usuarioRepository.updatePerfil(usuarioId, dados);
+    const { senhaHash, ...perfil } = updated;
+    return perfil;
+  }
+
+  // ========== ADMIN METHODS ==========
+  
   async adminCriarUsuario(dados: { nome: string; email: string; senha: string; papel: string }) {
     const existingUser = await usuarioRepository.findByEmail(dados.email);
     if (existingUser) {
@@ -125,11 +146,11 @@ export class UsuarioService {
     if (!usuario) {
       throw new Error('Usuário não encontrado');
     }
-
+    
     if (usuario.papel === 'admin') {
       throw new Error('Não é possível deletar outro administrador');
     }
-
+    
     await usuarioRepository.delete(id);
     return { message: 'Usuário deletado com sucesso' };
   }

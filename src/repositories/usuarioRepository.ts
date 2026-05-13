@@ -1,6 +1,6 @@
 import { db } from '../config/database';
 import { usuarios } from '../schemas';
-import { eq, ilike, and } from 'drizzle-orm';
+import { eq, ilike } from 'drizzle-orm';
 import { sql } from 'drizzle-orm';
 
 export class UsuarioRepository {
@@ -66,6 +66,15 @@ export class UsuarioRepository {
   async updateAvatar(id: number, avatarUrl: string) {
     const result = await db.update(usuarios)
       .set({ avatarUrl, updatedAt: new Date() })
+      .where(eq(usuarios.id, id))
+      .returning();
+    return result[0];
+  }
+
+  // NOVO: Atualizar perfil
+  async updatePerfil(id: number, data: { bio?: string; telefone?: string; endereco?: string }) {
+    const result = await db.update(usuarios)
+      .set({ ...data, updatedAt: new Date() })
       .where(eq(usuarios.id, id))
       .returning();
     return result[0];

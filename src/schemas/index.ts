@@ -10,6 +10,10 @@ export const usuarios = pgTable('usuarios', {
   senhaHash: varchar('senha_hash', { length: 255 }).notNull(),
   papel: varchar('papel', { length: 50 }).notNull().default('user'),
   avatarUrl: varchar('avatar_url', { length: 500 }),
+  // CAMPOS DO PERFIL
+  bio: text('bio'),
+  telefone: varchar('telefone', { length: 20 }),
+  endereco: text('endereco'),
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
 });
@@ -40,12 +44,16 @@ export const ingressos = pgTable('ingressos', {
 
 // ========== RELAÇÕES ==========
 
-export const eventosRelations = relations(eventos, ({ many, one }) => ({
-  ingressos: many(ingressos),
+export const usuariosRelations = relations(usuarios, ({ many }) => ({
+  eventos: many(eventos),
+}));
+
+export const eventosRelations = relations(eventos, ({ one, many }) => ({
   criador: one(usuarios, {
     fields: [eventos.criadoPor],
     references: [usuarios.id],
   }),
+  ingressos: many(ingressos),
 }));
 
 export const ingressosRelations = relations(ingressos, ({ one }) => ({
@@ -53,8 +61,4 @@ export const ingressosRelations = relations(ingressos, ({ one }) => ({
     fields: [ingressos.eventoId],
     references: [eventos.id],
   }),
-}));
-
-export const usuariosRelations = relations(usuarios, ({ many }) => ({
-  eventos: many(eventos),
 }));

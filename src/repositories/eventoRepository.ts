@@ -22,7 +22,18 @@ export class EventoRepository {
   }
 
   async update(id: number, data: any) {
-    const result = await db.update(eventos).set({ ...data, updatedAt: new Date() }).where(eq(eventos.id, id)).returning();
+    const result = await db.update(eventos)
+      .set({ ...data, updatedAt: new Date() })
+      .where(eq(eventos.id, id))
+      .returning();
+    return result[0];
+  }
+
+  async updateStatus(id: number, status: string) {
+    const result = await db.update(eventos)
+      .set({ status, updatedAt: new Date() })
+      .where(eq(eventos.id, id))
+      .returning();
     return result[0];
   }
 

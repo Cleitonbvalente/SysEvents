@@ -7,6 +7,7 @@ const controller = new EventoController();
 
 // Rotas públicas
 router.get('/', controller.listarTodos.bind(controller));
+router.get('/filtrar', controller.listarComFiltros.bind(controller)); // NOVA ROTA
 router.get('/:id', controller.buscarPorId.bind(controller));
 
 // Rotas protegidas (requer autenticação)

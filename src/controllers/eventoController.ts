@@ -189,4 +189,33 @@ export class EventoController {
       res.status(400).json({ success: false, error: error.message });
     }
   }
+  /**
+ * Listar eventos com filtros (data, status, local, categoria)
+ * GET /api/eventos/filtrar?status=publicado&local=São Paulo&dataInicio=2026-01-01&page=1&limit=10
+ */
+  async listarComFiltros(req: Request, res: Response) {
+    try {
+      const status = asString(req.query.status);
+      const local = asString(req.query.local);
+      const categoria = asString(req.query.categoria);
+      const dataInicio = req.query.dataInicio ? new Date(asString(req.query.dataInicio)) : undefined;
+      const dataFim = req.query.dataFim ? new Date(asString(req.query.dataFim)) : undefined;
+      const page = parseInt(asString(req.query.page)) || 1;
+      const limit = parseInt(asString(req.query.limit)) || 10;
+
+      const result = await eventoService.listarComFiltros({
+        status: status || undefined,
+        local: local || undefined,
+        categoria: categoria || undefined,
+        dataInicio,
+        dataFim,
+        page,
+        limit
+      });
+
+      res.json({ success: true, data: result });
+    } catch (error: any) {
+      res.status(500).json({ success: false, error: error.message });
+    }
+  }
 }

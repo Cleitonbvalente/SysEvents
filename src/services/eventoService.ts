@@ -28,6 +28,18 @@ export class EventoService {
     return await eventoRepository.findAll();
   }
 
+  async listarComFiltros(filters: {
+    status?: string;
+    local?: string;
+    categoria?: string;
+    dataInicio?: Date;
+    dataFim?: Date;
+    page?: number;
+    limit?: number;
+  }) {
+    return await eventoRepository.findAllWithFilters(filters);
+  }
+
   async buscarPorId(id: number) {
     const evento = await eventoRepository.findById(id);
     if (!evento) {

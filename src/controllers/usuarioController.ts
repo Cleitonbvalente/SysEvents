@@ -40,12 +40,7 @@ export class UsuarioController {
       const result = await usuarioService.login(email, senha);
       res.json({ success: true, data: result });
     } catch (error: any) {
-      res.status(401).json({
-        success: false,
-        error: error.message,
-        cause: error.cause?.message,
-        code: error.cause?.code,
-      });
+      res.status(401).json({ success: false, error: error.message });
     }
   }
 

@@ -62,3 +62,4 @@ export const ingressosRelations = relations(ingressos, ({ one }) => ({
     references: [eventos.id],
   }),
 }));
+

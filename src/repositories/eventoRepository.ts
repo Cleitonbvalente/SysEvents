@@ -117,3 +117,4 @@ export class EventoRepository {
     await db.delete(eventos).where(eq(eventos.id, id));
   }
 }
+
